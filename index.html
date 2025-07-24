@@ -1,480 +1,369 @@
-v<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bíblia online 3- Completa com todos os livros</title>
   <link rel="manifest" href="manifest.json" />
+   <meta name="theme-color" content="#4a342e" />
     <link rel="icon" type="image/png" href="icon-192x192.png" />
   <link rel="apple-touch-icon" href="icon-192x192.png" />
-  <meta name="theme-color" content="#4A148C" />
-    <style>
-        :root {
-            --primary-color: #4A148C; /* Roxo Escuro */
-            --secondary-color: #8E24AA; /* Roxo Médio */
-            --accent-color: #FFEB3B; /* Amarelo Vibrante (para destaque) */
-            --background-light: #F3E5F5; /* Lavanda Clara */
-            --background-dark: #673AB7; /* Roxo Profundo para seções */
-            --text-color-dark: #212121;
-            --text-color-light: #FFFFFF;
-            --error-color: #D32F2F; /* Vermelho Escuro */
-            --success-color: #388E3C; /* Verde Escuro */
-            --border-color: #CE93D8; /* Lilás Claro */
-            --input-bg: #EDE7F6; /* Roxo Bem Claro */
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-light);
-            color: var(--text-color-dark);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: var(--primary-color);
-            color: var(--text-color-light);
-            padding: 1.5em 0;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.8em;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        main {
-            flex-grow: 1; /* Permite que o main ocupe o espaço restante */
-            max-width: 960px;
-            margin: 25px auto;
-            padding: 25px;
-            background-color: var(--text-color-light);
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        section {
-            margin-bottom: 40px;
-            padding: 25px;
-            background-color: var(--background-dark);
-            border-radius: 10px;
-            color: var(--text-color-light);
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        section:last-child {
-            margin-bottom: 0;
-        }
-
-        h2 {
-            color: var(--accent-color);
-            border-bottom: 3px solid var(--secondary-color);
-            padding-bottom: 12px;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            text-align: center;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 0; /* Managed by grid gap */
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--background-light);
-            font-size: 1.1em;
-        }
-
-        select, input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1.1em;
-            box-sizing: border-box;
-            background-color: var(--input-bg);
-            color: var(--text-color-dark);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        select:focus, input[type="text"]:focus, input[type="number"]:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(142, 36, 170, 0.2);
-            outline: none;
-        }
-
-        button {
-            background-color: var(--accent-color);
-            color: var(--primary-color);
-            padding: 14px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            width: 100%; /* Ocupa a largura total no grid/flex */
-        }
-
-        button:hover {
-            background-color: #FFC107; /* Amarelo um pouco mais escuro */
-            transform: translateY(-2px);
-        }
-
-        .result-container {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: var(--background-light);
-            border-left: 6px solid var(--secondary-color);
-            border-radius: 8px;
-            word-wrap: break-word;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            color: var(--text-color-dark);
-        }
-
-        .result-container h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            font-size: 1.6em;
-            margin-bottom: 15px;
-        }
-
-        .verse-text {
-            font-size: 1.1em;
-            line-height: 1.8;
-            margin-bottom: 10px;
-        }
-
-        .result-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: var(--text-color-light);
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .result-item strong {
-            color: var(--secondary-color);
-        }
-
-        .result-item mark {
-            background-color: var(--accent-color);
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .message {
-            margin-top: 15px;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .error-message {
-            background-color: #FFEBEE; /* Vermelho muito claro */
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
-        }
-
-        .loading-message {
-            background-color: #E3F2FD; /* Azul muito claro */
-            color: var(--secondary-color);
-            border: 1px solid var(--secondary-color);
-        }
-
-        .success-message {
-            background-color: #E8F5E9; /* Verde muito claro */
-            color: var(--success-color);
-            border: 1px solid var(--success-color);
-        }
-
-        /* Accessibility: Focus styles */
-        .verse-text[tabindex="0"]:focus, .result-item[tabindex="0"]:focus {
-            outline: 3px solid var(--accent-color);
-            outline-offset: 3px;
-            box-shadow: 0 0 0 5px rgba(255, 235, 59, 0.4);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.2em;
-            }
-
-            main {
-                margin: 15px;
-                padding: 15px;
-            }
-
-            section {
-                padding: 20px;
-            }
-
-            h2 {
-                font-size: 1.8em;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr; /* Uma coluna em telas menores */
-            }
-
-            button {
-                padding: 12px 20px;
-                font-size: 1.1em;
-            }
-
-            .result-container {
-                padding: 15px;
-            }
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  body {
+    font-family: 'Georgia', serif;
+    max-width: 720px;
+    margin: 2em auto;
+    padding: 1.2em 2em;
+    background: #fdf6f0;
+    color: #4a342e;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #b49982aa;
+  }
+  h1 {
+    text-align: center;
+    color: #6d4c41;
+    margin-bottom: 1em;
+  }
+  section {
+    margin-bottom: 2.5em;
+  }
+  h2 {
+    border-bottom: 2px solid #a1887f;
+    padding-bottom: 0.3em;
+    margin-bottom: 1em;
+    color: #5d4037;
+  }
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+  }
+  select, input[type="number"], input[type="text"] {
+    width: 100%;
+    padding: 0.6em 0.8em;
+    font-size: 1.1em;
+    border-radius: 6px;
+    border: 1px solid #c7b299;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  select:focus, input[type="number"]:focus, input[type="text"]:focus {
+    border-color: #6d4c41;
+    outline: none;
+  }
+  button {
+    margin-top: 1.2em;
+    width: 100%;
+    background: #6d4c41;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #5b3e2b;
+  }
+  #resultado, #resultadoLocal {
+    margin-top: 1em;
+    background: #f7e7d3;
+    padding: 1em 1.2em;
+    border-radius: 8px;
+    min-height: 3em;
+    max-height: 360px;
+    overflow-y: auto;
+    font-size: 1.1em;
+    line-height: 1.4em;
+    box-shadow: inset 0 0 8px #cbb299;
+  }
+  .versiculo {
+    margin-bottom: 1.2em;
+    border-left: 5px solid #a6784a;
+    padding-left: 1em;
+  }
+  .referencia {
+    font-weight: 700;
+    margin-bottom: 0.2em;
+    color: #5d4037;
+    font-size: 1.05em;
+  }
+  .msg-erro {
+    color: #b00000;
+    font-weight: 600;
+  }
+  @media(max-width: 480px) {
+    body {
+      margin: 1em;
+      padding: 1em;
+    }
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>Bíblia Online Nós 3</h1>
-    </header>
 
-    <main>
-        <section id="busca-versiculo-exato">
-            <h2>Buscar Versículo Exato (Online)</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="book-select">Livro:</label>
-                    <select id="book-select">
-                        </select>
-                </div>
-                <div class="form-group">
-                    <label for="chapter-input">Capítulo:</label>
-                    <input type="number" id="chapter-input" min="1" value="1">
-                </div>
-                <div class="form-group">
-                    <label for="verse-input">Versículo:</label>
-                    <input type="number" id="verse-input" min="1" value="1">
-                </div>
-                <div class="form-group" style="grid-column: span 1 / auto;"> <button id="search-verse-btn">Buscar Versículo</button>
-                </div>
-            </div>
-            <div id="online-message" class="message"></div>
-            <div id="online-result" class="result-container"></div>
-        </section>
+<h1>Bíblia Online - Busca por Versículos e Palavras -Nós 3-</h1>
 
-        <section id="busca-local-palavra">
-            <h2>Buscar por Palavra ou Trecho (Híbrida/Local)</h2>
-            <div class="form-group">
-                <label for="local-search-input">Palavra ou Trecho:</label>
-                <input type="text" id="local-search-input" placeholder="Ex: amor, fé, Jesus, 'vida eterna'">
-            </div>
-            <button id="search-local-btn">Buscar Palavra</button>
-            <div id="local-message" class="message"></div>
-            <div id="local-result" class="result-container"></div>
-        </section>
-    </main>
+<section aria-label="Busca exata de versículos">
+  <h2>Busca Exata: Livro, Capítulo e Versículo</h2>
+  <form id="formExato" aria-describedby="descBuscaExata">
+    <div id="descBuscaExata" style="display:none;">Escolha livro, capítulo e versículo para buscar exatamente esse versículo online.</div>
+    <label for="livroExato">Livro</label>
+    <select id="livroExato" required aria-required="true" aria-label="Selecione o livro da Bíblia">
+      <option value="">-- Escolha o Livro --</option>
+      <option value="gn">Gênesis</option>
+      <option value="ex">Êxodo</option>
+      <option value="lv">Levítico</option>
+      <option value="nm">Números</option>
+      <option value="dt">Deuteronômio</option>
+      <option value="js">Josué</option>
+      <option value="jz">Juízes</option>
+      <option value="rt">Rute</option>
+      <option value="1sm">1 Samuel</option>
+      <option value="2sm">2 Samuel</option>
+      <option value="1rs">1 Reis</option>
+      <option value="2rs">2 Reis</option>
+      <option value="1cr">1 Crônicas</option>
+      <option value="2cr">2 Crônicas</option>
+      <option value="ed">Esdras</option>
+      <option value="ne">Neemias</option>
+      <option value="et">Ester</option>
+      <option value="jó">Jó</option>
+      <option value="sl">Salmos</option>
+      <option value="pv">Provérbios</option>
+      <option value="ec">Eclesiastes</option>
+      <option value="ct">Cânticos</option>
+      <option value="is">Isaías</option>
+      <option value="jr">Jeremias</option>
+      <option value="lm">Lamentações</option>
+      <option value="ez">Ezequiel</option>
+      <option value="dn">Daniel</option>
+      <option value="os">Oseias</option>
+      <option value="jl">Joel</option>
+      <option value="am">Amós</option>
+      <option value="ob">Obadias</option>
+      <option value="jn">Jonas</option>
+      <option value="mq">Miquéias</option>
+      <option value="na">Naum</option>
+      <option value="hc">Habacuque</option>
+      <option value="sf">Sofonias</option>
+      <option value="ag">Ageu</option>
+      <option value="zc">Zacarias</option>
+      <option value="ml">Malaquias</option>
+      <option value="mt">Mateus</option>
+      <option value="mc">Marcos</option>
+      <option value="lc">Lucas</option>
+      <option value="jo">João</option>
+      <option value="atos">Atos</option>
+      <option value="rm">Romanos</option>
+      <option value="1co">1 Coríntios</option>
+      <option value="2co">2 Coríntios</option>
+      <option value="gl">Gálatas</option>
+      <option value="ef">Efésios</option>
+      <option value="fp">Filipenses</option>
+      <option value="cl">Colossenses</option>
+      <option value="1ts">1 Tessalonicenses</option>
+      <option value="2ts">2 Tessalonicenses</option>
+      <option value="1tm">1 Timóteo</option>
+      <option value="2tm">2 Timóteo</option>
+      <option value="tt">Tito</option>
+      <option value="fm">Filemom</option>
+      <option value="hb">Hebreus</option>
+      <option value="tg">Tiago</option>
+      <option value="1pe">1 Pedro</option>
+      <option value="2pe">2 Pedro</option>
+      <option value="1jo">1 João</option>
+      <option value="2jo">2 João</option>
+      <option value="3jo">3 João</option>
+      <option value="jd">Judas</option>
+      <option value="ap">Apocalipse</option>
+    </select>
 
-    <script>
-        // --- Dados e Mapeamentos ---
-        const bookMap = {
-            "Gênesis": "gen", "Êxodo": "exo", "Levítico": "lev", "Números": "num", "Deuteronômio": "deu",
-            "Josué": "jos", "Juízes": "jdg", "Rute": "rut", "1 Samuel": "1sa", "2 Samuel": "2sa",
-            "1 Reis": "1ki", "2 Reis": "2ki", "1 Crônicas": "1ch", "2 Crônicas": "2ch", "Esdras": "ezr",
-            "Neemias": "neh", "Ester": "est", "Jó": "job", "Salmos": "psa", "Provérbios": "pro",
-            "Eclesiastes": "ecc", "Cantares": "sng", "Isaías": "isa", "Jeremias": "jer", "Lamentações": "lam",
-            "Ezequiel": "ezk", "Daniel": "dan", "Oseias": "hos", "Joel": "jol", "Amós": "amo",
-            "Obadias": "oba", "Jonas": "jon", "Miqueias": "mic", "Naum": "nam", "Habacuque": "hab",
-            "Sofonias": "zep", "Ageu": "hag", "Zacarias": "zec", "Malaquias": "mal",
-            "Mateus": "mat", "Marcos": "mrk", "Lucas": "luk", "João": "jhn", "Atos": "act",
-            "Romanos": "rom", "1 Coríntios": "1co", "2 Coríntios": "2co", "Gálatas": "gal", "Efésios": "eph",
-            "Filipenses": "php", "Colossenses": "col", "1 Tessalonicenses": "1th", "2 Tessalonicenses": "2th",
-            "1 Timóteo": "1ti", "2 Timóteo": "2ti", "Tito": "tit", "Filemom": "phm", "Hebreus": "heb",
-            "Tiago": "jas", "1 Pedro": "1pe", "2 Pedro": "2pe", "1 João": "1jn", "2 João": "2jn",
-            "3 João": "3jn", "Judas": "jud", "Apocalipse": "rev"
-        };
+    <label for="capituloExato">Capítulo</label>
+    <input type="number" id="capituloExato" min="1" required aria-required="true" />
 
-        let localBibleData = null; // Será preenchido com a Bíblia completa
+    <label for="versiculoExato">Versículo</label>
+    <input type="number" id="versiculoExato" min="1" required aria-required="true" />
 
-        // --- Elementos DOM ---
-        const bookSelect = document.getElementById('book-select');
-        const chapterInput = document.getElementById('chapter-input');
-        const verseInput = document.getElementById('verse-input');
-        const searchVerseBtn = document.getElementById('search-verse-btn');
-        const onlineResultDiv = document.getElementById('online-result');
-        const onlineMessageDiv = document.getElementById('online-message');
+    <button type="submit" aria-label="Buscar versículo exato">Buscar Versículo</button>
+  </form>
+  <div id="resultado" role="region" aria-live="polite">Aqui aparecerá o versículo buscado.</div>
+</section>
 
-        const localSearchInput = document.getElementById('local-search-input');
-        const searchLocalBtn = document.getElementById('search-local-btn');
-        const localResultDiv = document.getElementById('local-result');
-        const localMessageDiv = document.getElementById('local-message');
+<section aria-label="Busca por palavra no texto bíblico">
+  <h2>Busca por Palavra ou Trecho (base local simplificada)</h2>
+  <form id="formLocal" aria-describedby="descBuscaLocal">
+    <div id="descBuscaLocal" style="display:none;">Digite uma palavra ou trecho para buscar na base local.</div>
+    <label for="termoLocal">Digite palavra ou trecho</label>
+    <input type="text" id="termoLocal" placeholder="Exemplo: amor, fé, Jesus" required aria-required="true" />
+    <button type="submit" aria-label="Buscar por palavra">Buscar Palavra</button>
+  </form>
+  <div id="resultadoLocal" role="region" aria-live="polite">Resultados da busca por palavra aparecerão aqui.</div>
+</section>
 
-        // --- Funções Auxiliares ---
+<script>
+  // Base local simplificada (adicione mais versículos para ampliar)
+  const baseLocal = [
+    { book: "Gênesis", chapter: 1, verse: 1, text: "No princípio criou Deus os céus e a terra." },
+    { book: "Gênesis", chapter: 1, verse: 27, text: "Criou Deus o homem à sua imagem..." },
+    { book: "Salmos", chapter: 23, verse: 1, text: "O Senhor é o meu pastor; nada me faltará." },
+    { book: "João", chapter: 3, verse: 16, text: "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito..." },
+    { book: "Mateus", chapter: 5, verse: 9, text: "Bem-aventurados os pacificadores, porque serão chamados filhos de Deus." },
+    { book: "Romanos", chapter: 8, verse: 28, text: "Sabemos que Deus age em todas as coisas para o bem daqueles que o amam." }
+  ];
 
-        // Preencher o select de livros
-        function populateBooks() {
-            for (const bookName in bookMap) {
-                const option = document.createElement('option');
-                option.value = bookMap[bookName];
-                option.textContent = bookName;
-                bookSelect.appendChild(option);
-            }
-        }
-        populateBooks();
+  // Elementos do DOM
+  const formExato = document.getElementById('formExato');
+  const resultado = document.getElementById('resultado');
+  const formLocal = document.getElementById('formLocal');
+  const resultadoLocal = document.getElementById('resultadoLocal');
 
-        // Limpar mensagens e resultados
-        function clearResultsAndMessages(resultDiv, messageDiv) {
-            resultDiv.innerHTML = '';
-            messageDiv.textContent = '';
-            messageDiv.className = 'message'; // Reseta as classes
-        }
+  // Mapeamento dos livros para API bible-api.com (códigos em minúsculo)
+  // Usar o mesmo value do select
+  const livroMap = {
+    gn: 'genesis',
+    ex: 'exodus',
+    lv: 'leviticus',
+    nm: 'numbers',
+    dt: 'deuteronomy',
+    js: 'joshua',
+    jz: 'judges',
+    rt: 'ruth',
+    '1sm': '1-samuel',
+    '2sm': '2-samuel',
+    '1rs': '1-kings',
+    '2rs': '2-kings',
+    '1cr': '1-chronicles',
+    '2cr': '2-chronicles',
+    ed: 'ezra',
+    ne: 'nehemiah',
+    et: 'esther',
+    jó: 'job',
+    sl: 'psalms',
+    pv: 'proverbs',
+    ec: 'ecclesiastes',
+    ct: 'song-of-solomon',
+    is: 'isaiah',
+    jr: 'jeremiah',
+    lm: 'lamentations',
+    ez: 'ezekiel',
+    dn: 'daniel',
+    os: 'hosea',
+    jl: 'joel',
+    am: 'amos',
+    ob: 'obadiah',
+    jn: 'jonah',
+    mq: 'micah',
+    na: 'nahum',
+    hc: 'habakkuk',
+    sf: 'zephaniah',
+    ag: 'haggai',
+    zc: 'zechariah',
+    ml: 'malachi',
+    mt: 'matthew',
+    mc: 'mark',
+    lc: 'luke',
+    jo: 'john',
+    atos: 'acts',
+    rm: 'romans',
+    '1co': '1-corinthians',
+    '2co': '2-corinthians',
+    gl: 'galatians',
+    ef: 'ephesians',
+    fp: 'philippians',
+    cl: 'colossians',
+    '1ts': '1-thessalonians',
+    '2ts': '2-thessalonians',
+    '1tm': '1-timothy',
+    '2tm': '2-timothy',
+    tt: 'titus',
+    fm: 'philemon',
+    hb: 'hebrews',
+    tg: 'james',
+    '1pe': '1-peter',
+    '2pe': '2-peter',
+    '1jo': '1-john',
+    '2jo': '2-john',
+    '3jo': '3-john',
+    jd: 'jude',
+    ap: 'revelation'
+  };
 
-        // Função para destacar o termo de busca nos resultados locais
-        function highlightText(text, searchTerm) {
-            // Escapar caracteres especiais para a regex
-            const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp(`(${escapedSearchTerm})`, 'gi');
-            return text.replace(regex, '<mark>$1</mark>');
-        }
+  // Busca exata com API
+  formExato.addEventListener('submit', async e => {
+    e.preventDefault();
 
-        // --- Lógica de Carregamento da Bíblia Local ---
+    const livroSelecionado = document.getElementById('livroExato').value;
+    const cap = document.getElementById('capituloExato').value.trim();
+    const vers = document.getElementById('versiculoExato').value.trim();
 
-        async function loadLocalBible() {
-            localMessageDiv.classList.add('loading-message');
-            localMessageDiv.textContent = 'Carregando Bíblia completa para busca local (aproximadamente 3-5MB)...';
-            searchLocalBtn.disabled = true; // Desabilita o botão enquanto carrega
+    if (!livroSelecionado || !cap || !vers) {
+      resultado.innerHTML = `<p class="msg-erro">Por favor, preencha todos os campos para a busca exata.</p>`;
+      return;
+    }
 
-            try {
-                // IMPORTANT: Para que esta linha funcione localmente (abrindo index.html diretamente no navegador),
-                // você precisará de um servidor web simples (ex: `live-server` do npm, `python -m http.server`).
-                // Caso contrário, o navegador bloqueará a requisição por segurança (CORS).
-                // Coloque o arquivo 'bible.json' na mesma pasta do 'index.html'.
-                const response = await fetch('bible.json');
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status} ${response.statusText}`);
-                }
-                localBibleData = await response.json();
-                console.log('Bíblia local carregada com sucesso!', localBibleData.length, 'versículos.');
-                localMessageDiv.classList.remove('loading-message');
-                localMessageDiv.classList.add('success-message');
-                localMessageDiv.textContent = 'Bíblia completa carregada! Você já pode buscar por palavras.';
-                searchLocalBtn.disabled = false; // Habilita o botão após o carregamento
-            } catch (error) {
-                console.error('Erro ao carregar a Bíblia local:', error);
-                localMessageDiv.classList.remove('loading-message');
-                localMessageDiv.classList.add('error-message');
-                localMessageDiv.textContent = 'Erro ao carregar a Bíblia local para busca offline. Verifique sua conexão e se o arquivo bible.json está disponível. A busca por palavra não funcionará.';
-                searchLocalBtn.disabled = true; // Mantém desabilitado em caso de erro
-            }
-        }
+    resultado.textContent = 'Buscando versículo...';
 
-        // --- Event Listeners ---
+    const livroAPI = livroMap[livroSelecionado];
+    if (!livroAPI) {
+      resultado.innerHTML = `<p class="msg-erro">Livro não suportado para a API.</p>`;
+      return;
+    }
 
-        // Buscar versículo exato na API
-        searchVerseBtn.addEventListener('click', async () => {
-            clearResultsAndMessages(onlineResultDiv, onlineMessageDiv);
-            onlineMessageDiv.classList.add('loading-message');
-            onlineMessageDiv.textContent = 'Buscando versículo online...';
+    try {
+      const url = `https://bible-api.com/${livroAPI}+${cap}:${vers}?translation=almeida`;
+      const res = await fetch(url);
 
-            const selectedBookAbbr = bookSelect.value;
-            const chapter = chapterInput.value;
-            const verse = verseInput.value;
-            const bookName = bookSelect.options[bookSelect.selectedIndex].textContent;
+      if (!res.ok) throw new Error('Versículo não encontrado');
 
-            if (!selectedBookAbbr || !chapter || !verse) {
-                onlineMessageDiv.classList.add('error-message');
-                onlineMessageDiv.textContent = 'Por favor, selecione um livro e informe o capítulo e versículo.';
-                return;
-            }
+      const data = await res.json();
 
-            // Usando a tradução Almeida (ACF) - você pode mudar para 'kjv', 'nkjv', 'web', etc. se a API suportar
-            const apiUrl = `https://bible-api.com/${selectedBookAbbr}${chapter}:${verse}?translation=almeida`;
+      if (!data.text) {
+        resultado.innerHTML = `<p class="msg-erro">Versículo não encontrado.</p>`;
+        return;
+      }
 
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
+      resultado.innerHTML = `
+        <div class="versiculo" tabindex="0">
+          <div class="referencia">${data.reference}</div>
+          <div>${data.text.replace(/\n/g, '<br>')}</div>
+        </div>
+      `;
 
-                onlineMessageDiv.className = 'message'; // Reseta classe
+    } catch (error) {
+      resultado.innerHTML = `<p class="msg-erro">Erro: ${error.message}</p>`;
+    }
+  });
 
-                if (data.error || !data.verses || data.verses.length === 0) {
-                    onlineMessageDiv.classList.add('error-message');
-                    onlineMessageDiv.textContent = `Erro: ${data.error || 'Versículo não encontrado. Verifique o livro, capítulo e versículo digitados.'}`;
-                } else {
-                    const verseData = data.verses[0];
-                    const verseHtml = `
-                        <h3>${verseData.book_name} ${verseData.chapter}:${verseData.verse}</h3>
-                        <p class="verse-text" tabindex="0">${verseData.text}</p>
-                    `;
-                    onlineResultDiv.innerHTML = verseHtml;
-                }
-            } catch (error) {
-                onlineMessageDiv.classList.add('error-message');
-                onlineMessageDiv.textContent = 'Erro ao buscar o versículo online. Verifique sua conexão ou tente novamente.';
-                console.error('Erro na busca online:', error);
-            }
-        });
+  // Busca por palavra na base local
+  formLocal.addEventListener('submit', e => {
+    e.preventDefault();
 
-        // Buscar por palavra ou trecho na base local
-        searchLocalBtn.addEventListener('click', () => {
-            clearResultsAndMessages(localResultDiv, localMessageDiv);
-            const searchTerm = localSearchInput.value.trim().toLowerCase();
+    const termo = document.getElementById('termoLocal').value.trim().toLowerCase();
 
-            if (!localBibleData) {
-                localMessageDiv.classList.add('error-message');
-                localMessageDiv.textContent = 'A Bíblia ainda não foi carregada. Por favor, aguarde ou recarregue a página.';
-                return;
-            }
+    if (!termo) {
+      resultadoLocal.textContent = 'Digite uma palavra ou trecho para buscar.';
+      return;
+    }
 
-            if (!searchTerm) {
-                localMessageDiv.classList.add('error-message');
-                localMessageDiv.textContent = 'Por favor, digite uma palavra ou trecho para buscar.';
-                return;
-            }
+    const resultados = baseLocal.filter(v => v.text.toLowerCase().includes(termo));
 
-            // Filtra os resultados
-            const results = localBibleData.filter(item =>
-                item.text.toLowerCase().includes(searchTerm)
-            );
+    if (resultados.length === 0) {
+      resultadoLocal.textContent = 'Nenhum versículo encontrado na base local.';
+      return;
+    }
 
-            if (results.length === 0) {
-                localMessageDiv.textContent = 'Nenhum resultado encontrado para o termo pesquisado na Bíblia local.';
-            } else {
-                let resultsHtml = `<h3>Resultados da Busca Local para "${searchTerm}":</h3>`;
-                // Limita o número de resultados para evitar sobrecarga da interface
-                const displayLimit = 50;
-                results.slice(0, displayLimit).forEach(item => {
-                    resultsHtml += `
-                        <div class="result-item" tabindex="0">
-                            <strong>${item.book} ${item.chapter}:${item.verse}</strong>: ${highlightText(item.text, searchTerm)}
-                        </div>
-                    `;
-                });
-                if (results.length > displayLimit) {
-                    resultsHtml += `<p class="message" style="background-color: #FFF3E0; color: #E65100;">Mostrando os primeiros ${displayLimit} resultados de ${results.length} encontrados.</p>`;
-                }
-                localResultDiv.innerHTML = resultsHtml;
-            }
-        });
-
-        // Chamar a função para carregar a Bíblia local assim que o script é executado
-        loadLocalBible();
-    </script>
-    <script>
+    resultadoLocal.innerHTML = resultados.map(v => `
+      <div class="versiculo" tabindex="0">
+        <div class="referencia">${v.book} ${v.chapter}:${v.verse}</div>
+        <div>${v.text}</div>
+      </div>
+    `).join('');
+  });
+</script>
+  <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
@@ -482,6 +371,6 @@ v<!DOCTYPE html>
           .catch(err => console.error('❌ Erro ao registrar o SW:', err));
       });
     }
-</script>
+  </script>
 </body>
 </html>
